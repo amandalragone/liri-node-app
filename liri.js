@@ -1,16 +1,27 @@
 require("dotenv").config();
 
 var keys = require("./keys.js");
+var axios = require("axios");
+var moment = require('moment');
 
 // var spotify = new Spotify(keys.spotify);
 
 var command = process.argv[2];
 
-// var userSearch = process.argv[3];
+var userSearch = process.argv[3];
 
 switch (command) {
     case "concert-this":
-    console.log("You're searching for a concert");
+    var queryURL = "https://rest.bandsintown.com/artists/" + userSearch + "/events?app_id=codingbootcamp";
+
+    axios.get(queryURL).then(
+        function(response){
+
+            response.data.forEach(function(element) {
+                console.log(element.venue.name + "\n" + element.venue.city + ", " + element.venue.region + ", " + element.venue.country + "\n" + moment(element.datetime).format("MM/DD/YYYY") + "\n");
+            })
+            
+    })
     break;
     case "spotify-this-song":
     console.log("You're searching for a song");
