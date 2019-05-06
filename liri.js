@@ -3,8 +3,9 @@ require("dotenv").config();
 var keys = require("./keys.js");
 var axios = require("axios");
 var moment = require('moment');
+var Spotify = require('node-spotify-api');
 
-// var spotify = new Spotify(keys.spotify);
+var spotify = new Spotify(keys.spotify);
 
 var command = process.argv[2];
 
@@ -24,7 +25,26 @@ switch (command) {
     })
     break;
     case "spotify-this-song":
-    console.log("You're searching for a song");
+
+    spotify.search({ type: 'track', query: userSearch }).then(function(response) {
+       
+        var details = response.tracks.items;
+        
+        details.forEach(function(element){
+
+            element.artists.forEach(function(e){
+                artist = e.name;
+            })
+            
+            if (element.preview_url === null) {
+                console.log(artist + "\n" + element.name + "\n" + element.album.name + "\n" + element.external_urls.spotify + "\n");
+            } else {
+                console.log(artist + "\n" + element.name + "\n" + element.album.name + "\n" + element.preview_url + "\n");
+            }
+            
+        });
+      });
+
     break;
     case "movie-this":
     console.log("You're searching for a movie");
