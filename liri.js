@@ -18,8 +18,16 @@ switch (command) {
     axios.get(queryURL).then(
         function(response){
 
-            response.data.forEach(function(element) {
-                console.log(element.venue.name + "\n" + element.venue.city + ", " + element.venue.region + ", " + element.venue.country + "\n" + moment(element.datetime).format("MM/DD/YYYY") + "\n");
+            var concerts = response.data;
+
+            concerts.forEach(function(element) {
+
+                if (element.venue.region) {
+                    console.log(element.venue.name + "\n" + element.venue.city + ", " + element.venue.region + ", " + element.venue.country + "\n" + moment(element.datetime).format("MM/DD/YYYY") + "\n");
+                } else {
+                    console.log(element.venue.name + "\n" + element.venue.city + ", " + element.venue.country + "\n" + moment(element.datetime).format("MM/DD/YYYY") + "\n");
+                }
+                
             })
             
     })
@@ -28,9 +36,9 @@ switch (command) {
 
     spotify.search({ type: 'track', query: userSearch }).then(function(response) {
        
-        var details = response.tracks.items;
+        var songs = response.tracks.items;
         
-        details.forEach(function(element){
+        songs.forEach(function(element){
 
             element.artists.forEach(function(e){
                 artist = e.name;
@@ -47,7 +55,17 @@ switch (command) {
 
     break;
     case "movie-this":
-    console.log("You're searching for a movie");
+
+    var queryURL = "http://www.omdbapi.com/?apikey=trilogy&t=" + userSearch;
+
+    axios.get(queryURL).then(function(response){
+        
+        var movie = response.data;
+
+        console.log(movie.Title + "\n" + movie.Year + "\n" + movie.Country + "\n" + movie.Language + "\n" + movie.Plot + "\n" + movie.Actors + "\n" + movie.Ratings[0].Source + ": " + movie.Ratings[0].Value + "\n" + movie.Ratings[1].Source + ": " + movie.Ratings[1].Value + "\n");
+        
+    })
+    
     break;
     case "do-what-it-says":
     console.log("You're searching for something");
