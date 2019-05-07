@@ -31,13 +31,15 @@ function getConcert() {
                 
             })
             
+    }).catch(function(err){
+        console.log("Ops, an error occurred: " + err);
     })
 
 }
 
 function getSong() {
     spotify.search(options).then(function(response) {
-       
+
         var songs = response.tracks.items;
         
         songs.forEach(function(element){
@@ -53,7 +55,10 @@ function getSong() {
             }
             
         });
-      });
+
+    }).catch(function(err){
+        console.log("Oops, it looks like an error occurred: " + err);
+    });
 }
 
 function getMovie() {
@@ -64,6 +69,8 @@ function getMovie() {
 
         console.log(movie.Title + "\n" + movie.Year + "\n" + movie.Country + "\n" + movie.Language + "\n" + movie.Plot + "\n" + movie.Actors + "\n" + movie.Ratings[0].Source + ": " + movie.Ratings[0].Value + "\n" + movie.Ratings[1].Source + ": " + movie.Ratings[1].Value + "\n");
         
+    }).catch(function(err) {
+        console.log("An error occurred: " + err);
     })
 
 }
