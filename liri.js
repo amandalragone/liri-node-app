@@ -1,3 +1,5 @@
+//Requiring files and libraries that will be used.
+
 require("dotenv").config();
 
 var keys = require("./keys.js");
@@ -6,11 +8,10 @@ var moment = require('moment');
 var Spotify = require('node-spotify-api');
 var fs = require("fs");
 
+//Global vars
 var spotify = new Spotify(keys.spotify);
-
 var command = process.argv[2];
-
-var userSearch = process.argv[3];
+var userSearch = process.argv.slice(3).join(" ");
 var queryURL;
 
 function getConcert() {
@@ -35,7 +36,7 @@ function getConcert() {
 }
 
 function getSong() {
-    spotify.search({ type: 'track', query: userSearch }).then(function(response) {
+    spotify.search(options).then(function(response) {
        
         var songs = response.tracks.items;
         
@@ -69,43 +70,67 @@ function getMovie() {
 
 switch (command) {
     case "concert-this":
-    queryURL = "https://rest.bandsintown.com/artists/" + userSearch + "/events?app_id=codingbootcamp";
-    getConcert();
+        
+        if (userSearch) {
+            queryURL = "https://rest.bandsintown.com/artists/" + userSearch + "/events?app_id=codingbootcamp";
+        } else {
+            queryURL = "https://rest.bandsintown.com/artists/taylor+swift/events?app_id=codingbootcamp";
+        }
+        
+        getConcert();
     
     break;
+
     case "spotify-this-song":
-    getSong();
 
-    break;
-    case "movie-this":
-
-    queryURL = "http://www.omdbapi.com/?apikey=trilogy&t=" + userSearch;
-    getMovie();
+        if(userSearch) {
+            var options = { type: 'track', query: userSearch };
+        } else {
+            var options = { type: 'track,artist' , query: 'The Sign,Ace of Base' };
+        }
+        
+        getSong();
     
     break;
-    case "do-what-it-says":
 
-    fs.readFile("random.txt", "utf-8", function(error, data) {
-
-        if (error) return console.log (error);
-
-        var newSearch = data.split(",");
-
-        if (newSearch[0] === "concert-this") {
-            queryURL = "https://rest.bandsintown.com/artists/" + newSearch[1] + "/events?app_id=codingbootcamp";
-            getConcert();
-        } else if (newSearch[0] === "spotify-this-song") {
-            userSearch = newSearch[1]; 
-            getSong();
-        } else if (newSearch[0] === "movie-this") {
-            queryURL = "http://www.omdbapi.com/?apikey=trilogy&t=" + newSearch[1];
-            getMovie();
+    case "movie-this":
+       
+        if (userSearch) {
+            queryURL = "http://www.omdbapi.com/?apikey=trilogy&t=" + userSearch;
+        } else {
+            queryURL = "http://www.omdbapi.com/?apikey=trilogy&t=mr+nobody";
         }
 
-    })
+        getMovie();
+    
+    break;
+    
+    case "do-what-it-says":
+
+        fs.readFile("random.txt", "utf-8", function(error, data) {
+
+            if (error) return console.log (error);
+
+            var newSearch = data.split(",");
+
+            if (newSearch[0] === "concert-this") {
+                queryURL = "https://rest.bandsintown.com/artists/" + newSearch[1] + "/events?app_id=codingbootcamp";
+                getConcert();
+            } else if (newSearch[0] === "spotify-this-song") {
+                userSearch = newSearch[1]; 
+                getSong();
+            } else if (newSearch[0] === "movie-this") {
+                queryURL = "http://www.omdbapi.com/?apikey=trilogy&t=" + newSearch[1];
+                getMovie();
+            }
+
+        }) 
 
     break;
+
     default:
-    console.log("I don't know.");
+        
+        console.log("Please specify your search. You can choose one of the following commands: movie-this, spotify-this-song, concert-this, or do-what-it-says.");
+    
     break;
 }
