@@ -4,17 +4,17 @@ var keys = require("./keys.js");
 var axios = require("axios");
 var moment = require('moment');
 var Spotify = require('node-spotify-api');
+var fs = require("fs");
 
 var spotify = new Spotify(keys.spotify);
 
 var command = process.argv[2];
 
 var userSearch = process.argv[3];
+var queryURL;
 
-switch (command) {
-    case "concert-this":
-    var queryURL = "https://rest.bandsintown.com/artists/" + userSearch + "/events?app_id=codingbootcamp";
-
+function getConcert() {
+    
     axios.get(queryURL).then(
         function(response){
 
@@ -31,9 +31,10 @@ switch (command) {
             })
             
     })
-    break;
-    case "spotify-this-song":
 
+}
+
+function getSong() {
     spotify.search({ type: 'track', query: userSearch }).then(function(response) {
        
         var songs = response.tracks.items;
@@ -52,11 +53,9 @@ switch (command) {
             
         });
       });
+}
 
-    break;
-    case "movie-this":
-
-    var queryURL = "http://www.omdbapi.com/?apikey=trilogy&t=" + userSearch;
+function getMovie() {
 
     axios.get(queryURL).then(function(response){
         
@@ -65,10 +64,46 @@ switch (command) {
         console.log(movie.Title + "\n" + movie.Year + "\n" + movie.Country + "\n" + movie.Language + "\n" + movie.Plot + "\n" + movie.Actors + "\n" + movie.Ratings[0].Source + ": " + movie.Ratings[0].Value + "\n" + movie.Ratings[1].Source + ": " + movie.Ratings[1].Value + "\n");
         
     })
+
+}
+
+switch (command) {
+    case "concert-this":
+    queryURL = "https://rest.bandsintown.com/artists/" + userSearch + "/events?app_id=codingbootcamp";
+    getConcert();
+    
+    break;
+    case "spotify-this-song":
+    getSong();
+
+    break;
+    case "movie-this":
+
+    queryURL = "http://www.omdbapi.com/?apikey=trilogy&t=" + userSearch;
+    getMovie();
     
     break;
     case "do-what-it-says":
-    console.log("You're searching for something");
+
+    fs.readFile("random.txt", "utf-8", function(error, data) {
+
+        if (error) return console.log (error);
+
+        var newSearch = data.split(",");
+
+        if (newSearch[0] === "concert-this") {
+            queryURL = "https://rest.bandsintown.com/artists/" + newSearch[1] + "/events?app_id=codingbootcamp";
+            getConcert();
+        } else if (newSearch[0] === "spotify-this-song") {
+            userSearch = newSearch[1]; 
+            getSong();
+        } else if (newSearch[0] === "movie-this") {
+            queryURL = "http://www.omdbapi.com/?apikey=trilogy&t=" + newSearch[1];
+            getMovie();
+        }
+
+    })
+
     break;
     default:
     console.log("I don't know.");
