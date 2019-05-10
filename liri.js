@@ -31,13 +31,16 @@ function getConcert() {
                 
             })
             
+    }).catch(function(err){
+
+        console.log("Ops, an error occurred: " + err);
     })
 
 }
 
 function getSong() {
     spotify.search(options).then(function(response) {
-       
+
         var songs = response.tracks.items;
         
         songs.forEach(function(element){
@@ -53,7 +56,11 @@ function getSong() {
             }
             
         });
-      });
+
+    }).catch(function(err){
+        console.log("Oops, it looks like an error occurred: " + err);
+    });
+
 }
 
 function getMovie() {
@@ -64,6 +71,8 @@ function getMovie() {
 
         console.log(movie.Title + "\n" + movie.Year + "\n" + movie.Country + "\n" + movie.Language + "\n" + movie.Plot + "\n" + movie.Actors + "\n" + movie.Ratings[0].Source + ": " + movie.Ratings[0].Value + "\n" + movie.Ratings[1].Source + ": " + movie.Ratings[1].Value + "\n");
         
+    }).catch(function(err) {
+        console.log("An error occurred: " + err);
     })
 
 }
@@ -84,9 +93,9 @@ switch (command) {
     case "spotify-this-song":
 
         if(userSearch) {
-            var options = { type: 'track', query: userSearch };
+            options = { type: 'track', query: userSearch };
         } else {
-            var options = { type: 'track,artist' , query: 'The Sign,Ace of Base' };
+            options = { type: 'track,artist' , query: 'The Sign,Ace of Base' };
         }
         
         getSong();
@@ -116,8 +125,8 @@ switch (command) {
             if (newSearch[0] === "concert-this") {
                 queryURL = "https://rest.bandsintown.com/artists/" + newSearch[1] + "/events?app_id=codingbootcamp";
                 getConcert();
-            } else if (newSearch[0] === "spotify-this-song") {
-                userSearch = newSearch[1]; 
+            } else if (newSearch[0] === "spotify-this-song") { 
+                options = { type: 'track', query: newSearch[1] };
                 getSong();
             } else if (newSearch[0] === "movie-this") {
                 queryURL = "http://www.omdbapi.com/?apikey=trilogy&t=" + newSearch[1];
