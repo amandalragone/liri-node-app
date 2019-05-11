@@ -14,6 +14,8 @@ var command = process.argv[2];
 var userSearch = process.argv.slice(3).join(" ");
 var queryURL;
 
+//Function that will make a call to search the Bands In Town API. After running, it will return the concert venue name, city, state, country and date.
+
 function getConcert() {
     
     axios.get(queryURL).then(
@@ -24,9 +26,9 @@ function getConcert() {
             concerts.forEach(function(element) {
 
                 if (element.venue.region) {
-                    console.log(element.venue.name + "\n" + element.venue.city + ", " + element.venue.region + ", " + element.venue.country + "\n" + moment(element.datetime).format("MM/DD/YYYY") + "\n");
+                    console.log("Venue name: " + element.venue.name + "\nLocation: " + element.venue.city + ", " + element.venue.region + ", " + element.venue.country + "\nDate: " + moment(element.datetime).format("MM/DD/YYYY") + "\n");
                 } else {
-                    console.log(element.venue.name + "\n" + element.venue.city + ", " + element.venue.country + "\n" + moment(element.datetime).format("MM/DD/YYYY") + "\n");
+                    console.log("Venue name: " + element.venue.name + "\nLocation: " + element.venue.city + ", " + element.venue.country + "\nDate: " + moment(element.datetime).format("MM/DD/YYYY") + "\n");
                 }
                 
             })
@@ -37,6 +39,8 @@ function getConcert() {
     })
 
 }
+
+//Function that will make a call to search Spotify. After running, it will return the artist, album, name of the song, and a URL.
 
 function getSong() {
     spotify.search(options).then(function(response) {
@@ -50,9 +54,9 @@ function getSong() {
             })
             
             if (element.preview_url === null) {
-                console.log(artist + "\n" + element.name + "\n" + element.album.name + "\n" + element.external_urls.spotify + "\n");
+                console.log("Band/Artist name: " + artist + "\nSong: " + element.name + "\nAlbum: " + element.album.name + "\nURL: " + element.external_urls.spotify + "\n");
             } else {
-                console.log(artist + "\n" + element.name + "\n" + element.album.name + "\n" + element.preview_url + "\n");
+                console.log("Band/Artist name: " + artist + "\nSong: " + element.name + "\nAlbum: " + element.album.name + "\nURL: " + element.preview_url + "\n");
             }
             
         });
@@ -63,19 +67,23 @@ function getSong() {
 
 }
 
+//Function that will make a call to search the OMDB API. After running, it will return the movie title, year, country, language, movie plot, actors, as well as ratings in IMDB and Rotten Tomatoes.
+
 function getMovie() {
 
     axios.get(queryURL).then(function(response){
         
         var movie = response.data;
 
-        console.log(movie.Title + "\n" + movie.Year + "\n" + movie.Country + "\n" + movie.Language + "\n" + movie.Plot + "\n" + movie.Actors + "\n" + movie.Ratings[0].Source + ": " + movie.Ratings[0].Value + "\n" + movie.Ratings[1].Source + ": " + movie.Ratings[1].Value + "\n");
+        console.log("Title: " + movie.Title + "\nYear: " + movie.Year + "\nCountry: " + movie.Country + "\nLanguage: " + movie.Language + "\nPlot: " + movie.Plot + "\nActors: " + movie.Actors + "\n" + movie.Ratings[0].Source + ": " + movie.Ratings[0].Value + "\n" + movie.Ratings[1].Source + ": " + movie.Ratings[1].Value + "\n");
         
     }).catch(function(err) {
         console.log("An error occurred: " + err);
     })
 
 }
+
+//Defining what will be the query URL based on which command the user picks.
 
 switch (command) {
     case "concert-this":
@@ -113,6 +121,8 @@ switch (command) {
         getMovie();
     
     break;
+
+    //If the user picks do-what-it-says, the file random.txt will be read and the search will be based on what's written in it.
     
     case "do-what-it-says":
 
@@ -136,6 +146,8 @@ switch (command) {
         }) 
 
     break;
+
+    //If no command is chosen, or if it's typed incorrectly, this error message will be thrown:
 
     default:
         
