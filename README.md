@@ -59,6 +59,7 @@ Phase Three: Confirm errors are being caught and handled, if thrown.
 
 
 If the user does not specify a command after entering `node liri.js`, or if the command is not written properly, an error will be thrown:
+
 ![Error for missing or incorrect command](images/error-example.gif)
 
 
