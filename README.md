@@ -29,26 +29,32 @@ SPOTIFY_SECRET=your-spotify-secret
 
 <h2>MVP</h2>
 Phase One: Run API Search and filter response.
+
 Phase Two: Define what each search will run in case the user does not specify a query.
+
 Phase Three: Confirm errors are being caught and handled, if thrown.
 
 <h2>Project Management</h2>
 [Project Board](https://github.com/amandalragone/liri-node-app/projects/1)
 
 <h2>How to use this app</h2>
+
 1. Open Terminal.
+
 2. Navigate to the folder where the code is stored. (For example: `cd <Documents>/<my-repository>` )
+
 3. Run a search:
-- To search for a movie, run `node liri.js movie-this <your-movie>`:
+
+* To search for a movie, run `node liri.js movie-this <your-movie>`:
 ![Movie search](images/movie-this.gif)
 
-- To search for a song, run `node liri.js spotify-this <your-song>`:
+* To search for a song, run `node liri.js spotify-this <your-song>`:
 ![Song search](images/spotify-this-song.gif)
 
-- To search for a concert, run `node liri.js concert-this <your-artist/band>`:
+* To search for a concert, run `node liri.js concert-this <your-artist/band>`:
 ![Concert search](images/concert-this.gif)
 
-- To check out what's been previously entered in the random.txt file, run `node liri.js do-what-it-says`:
+* To check out what's been previously entered in the random.txt file, run `node liri.js do-what-it-says`:
 ![Reading what's in random.txt](images/do-what-it-says.gif)
 
 
